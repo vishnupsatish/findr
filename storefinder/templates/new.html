@@ -1,0 +1,28 @@
+{% extends "navbar.html" %}
+{% block content %}
+        <div class="row" style="margin-top: 10px;">
+        <form action="" method="POST" class="col s12">
+            {{ form.hidden_tag() }}
+            <div class="row">
+            <div class="input-field col s12">
+                {{ form.category.label(class="active") }}
+                {% if form.category.errors %}
+                    {{ form.category(class="validate") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.category.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.category(class="validate") }}
+                {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            {{ form.submit(class="btn") }}
+        </div>
+        </form>
+
+      </div>
+{% endblock content %}

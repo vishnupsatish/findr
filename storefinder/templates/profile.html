@@ -1,0 +1,73 @@
+{% extends "navbar.html" %}
+{% block content %}
+    
+
+<!--<div class="row">
+  <div class="col s12 m12">
+    <div class="card">
+      <div class="card-image">
+        <img style="max-height:30vmin; height: auto; width: 100%;" src="https://icons8.com/wp-content/uploads/2020/02/material-design.jpg">
+
+        <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+        <button class="btn halfway-fab btn-floating">LOl</button>
+        <div style="width: 100%; height: 15vmax; white-space: nowrap;text-align: center;">
+          <span style="display: inline-block; vertical-align: middle; height:100%" class="helper"></span>
+          <img style="width: auto; height: 50%; position: absolute; top: 28%; left: 35%;" class="btn-floating halfway-fab waves-effect waves-light" src="/static/profile_pics/{{ user.image_file }}">
+          <img style="display: inline-block; width: auto; height: 50%; margin-right: auto; margin-left: auto; vertical-align: middle; text-align: center; max-width: 100%;" class="btn-floating halfway-fab waves-effect waves-light" src="/static/profile_pics/{{ user.image_file }}">
+
+        </div>
+      </div>
+
+
+      <div class="card-content">
+        <h4 class="center-item">{{ user.username }}</h4>
+
+
+        <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I require little markup to use effectively.</p>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+
+
+    <div style="height: auto; " class="row">
+      <div style="
+      display: block;
+      align-items: center;
+      height: 10vw;margin-top: 15px;" class="col s9 push-s3">
+      <h4>{{ user.username }}</h4>
+      <p><i style="color: grey" class="material-icons tiny">school</i> &nbsp;
+        Closest to {{ School.query.filter_by(id=user.school_id).all()[0].name }}, {{ School.query.filter_by(id=user.school_id).all()[0].city }}, {{ School.query.filter_by(id=user.school_id).all()[0].country }}
+      </p>
+      {% for interest in user.interests.split(",") %}
+
+      {% if interest in current_user.interests.split(",") and current_user != user %}
+      <div class="teal lighten-2 chip">
+        {{ interest }}
+      </div>
+      {% else %}
+      <div class="chip">
+        {{ interest }}
+      </div>
+      {% endif %}
+
+      {% endfor %}
+
+    
+    </div>
+
+      <div class="col s3 pull-s9" style="padding-right: 50px;">
+        <img class="center-item" style="margin-bottom: 30px;display: block; border-radius: 50%; margin-top: 30px;height: 10vw;" src="/static/profile_pics/{{ user.image_file }}" alt="">
+        {% if current_user == user %}
+        <a href="{{ url_for('account') }}" style="display: block; margin-left: auto; margin-right: auto;" class="btn center-item">Edit profile</a>
+        {% else %}
+        <button style="display: block; margin-left: auto; margin-right: auto;" class="btn center-item">Connect</button>
+
+        {% endif %}
+      </div>
+    </div>
+
+
+         
+{% endblock content %}
