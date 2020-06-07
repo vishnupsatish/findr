@@ -187,7 +187,7 @@ def new_2():
         store = Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png")
         db.session.add(store)
         db.session.commit()
-        flash("Your store posting has been sent to the moderators for approval.", "success")
+        flash("Your facility has been posted!", "success")
         return redirect(url_for("home"))
     return render_template("new_2.html", form=form, category=session['category'], page_title="New")
 
