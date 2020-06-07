@@ -196,7 +196,10 @@ def new_2():
 
 @app.route('/store/<int:id>', methods=["GET", "POST"])
 def specific_store(id):
-    admin = current_user.admin
+    if not current_user.is_authenticated():
+        admin = False
+    else:
+        admin = current_user.admin
     form = AdminDeleteForm()
     if form.validate_on_submit():
         store = Store.query.get_or_404(id)
