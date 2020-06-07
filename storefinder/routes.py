@@ -196,7 +196,7 @@ def new_2():
 
 @app.route('/store/<int:id>', methods=["GET", "POST"])
 def specific_store(id):
-    if not current_user.is_authenticated():
+    if not current_user.is_authenticated:
         admin = False
     else:
         admin = current_user.admin
