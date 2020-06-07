@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% block content %}
 <div class="row">
-    <img style="display: block; width: 30%;" class="align-centre responsive-img"
+    <img class="specific-store-image align-centre responsive-img store-logo"
          src="https://res.cloudinary.com/{{ cloud_name }}/image/upload/{{ image }}">
     {% if admin %}
     <form action="" method="POST">
@@ -12,7 +12,9 @@
     </form>
     {% endif %}
     <div class="chip">
+        <a href="{{ url_for('specific_category', category=category) }}">
         {{ category }}
+        </a>
     </div>
     <br>
     {{ content|safe }}

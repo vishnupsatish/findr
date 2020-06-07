@@ -11,9 +11,19 @@
 }
 
 
+.image-logo {
+    height: 64px;
+}
 
+.store-logo {
+    border: 1px solid #000000;
+}
 
-
+.specific-store-image {
+    margin-top: 20px;
+    display: block;
+    width: 30%;
+}
 
 #profile-page-header .card-profile-image {
   width: 110px;

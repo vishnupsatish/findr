@@ -5,24 +5,17 @@
 {% block navbar %}
 <div class="navbar-fixed">
 
-    <nav>
+    <nav class="blue lighten-2">
         <div class="nav-wrapper">
 
             <form action="" method="POST" class="col s12">
+                {{ form.hidden_tag() }}
+
 
                 <div style="float: right; width: 90%" class="input-field">
-                    {% if form.name.errors %}
-                    {{ form.name(id="search") }}
 
-                    <div class="invalid-feedback">
-                        {% for error in form.name.errors %}
-                        <span class="error-feedback">{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                    {% else %}
                     {{ form.name(id="search", maxlength=15) }}
 
-                    {% endif %}
                     <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                     <i class="material-icons">close</i>
 

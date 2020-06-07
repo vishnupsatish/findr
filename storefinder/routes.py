@@ -32,13 +32,16 @@ def home():
     for i in range(max_available):
         display_stores.append(stores[i])
     print(display_stores)
-    return render_template('home.html', stores=display_stores, title="Recently Added", cloud_name=cloud_name)
+    return render_template('home.html', stores=display_stores, title="Recently Added", cloud_name=cloud_name, page_title="Home")
 
+@app.route('/about')
+def about():
+    return render_template('about.html', page_title="About")
 
 @app.route('/all')
 def all():
     all_stores = Store.query.order_by(Store.company_name)
-    return render_template('home.html', stores=all_stores, title="All businsses/facilities/amenities")
+    return render_template('home.html', stores=all_stores, title="All businsses/facilities/amenities", cloud_name=cloud_name, page_title="All")
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -52,7 +55,7 @@ def register():
         db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, page_title="Register")
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -68,7 +71,7 @@ def login():
             return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check email and password', 'error')
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', title='Login', form=form, page_title="Login")
 
 
 @app.route("/logout")
@@ -87,7 +90,7 @@ def new():
         session['category'] = form.category.data
         return redirect(url_for('new_2'))
 
-    return render_template('new.html', title="New", form=form)
+    return render_template('new.html', title="New", form=form, page_title="New")
 
 form_class_map = {
     "Arts and Crafts": BasicStoreForm,
@@ -188,7 +191,7 @@ def new_2():
         db.session.commit()
         flash("Your store posting has been sent to the moderators for approval.", "success")
         return redirect(url_for("home"))
-    return render_template("new_2.html", form=form, category=session['category'])
+    return render_template("new_2.html", form=form, category=session['category'], page_title="New")
 
 
 
@@ -207,26 +210,46 @@ def specific_store(id):
         return redirect(url_for('home'))
 
     store = Store.query.get_or_404(id)
-    return render_template('specific_store.html', content=store.content, image=store.image_file, category=store.category, form=form, admin=admin, cloud_name=cloud_name)
+    return render_template('specific_store.html', content=store.content, image=store.image_file, category=store.category, form=form, admin=admin, cloud_name=cloud_name, page_title="Store")
 
 
-@app.route('/search')
+@app.route('/search', methods=["GET", "POST"])
 def search():
     form = ProfileSearchForm()
-    return render_template('search.html', form=form)
+    if form.validate_on_submit():
+        return redirect(url_for('search_results', term=form.name.data))
+    return render_template('search.html', form=form, page_title="Search")
+
+@app.route('/search/<term>')
+def search_results(term):
+    all_stores = Store.query.all()
+    results = []
+    term = term.lower()
+    for store in all_stores:
+        if term in store.company_name.lower() or term in store.category.lower():
+            results.append(store)
+    title = "Search Results"
+    if len(results) == 0:
+        title = "No results found for the search term \"" + term + "\".  <a href='/search'>Search again?</a>"
+    return render_template('home.html', title=title, stores=results, cloud_name=cloud_name, page_title="Search Results")
 
 @app.route('/category', methods=["GET", "POST"])
 def category():
     form = CategorySearchForm()
-
     if form.validate_on_submit():
         return redirect(url_for('specific_category', category=form.category.data))
-
-    return render_template('new.html', title="New", form=form)
+    return render_template('new.html', title="New", form=form, page_title="Categories")
 
 
 @app.route('/category/<string:category>')
 def specific_category(category):
     stores = Store.query.filter_by(category=category).order_by(Store.date.desc())
-    return render_template('home.html', stores=stores, title="Category: " + category)
+    return render_template('home.html', stores=stores, title="Category: " + category, cloud_name=cloud_name, page_title="Category")
 
+
+
+# Error Handling
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

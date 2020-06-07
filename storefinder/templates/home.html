@@ -1,19 +1,19 @@
 {% extends "navbar.html" %}
 {% block content %}
-<h5>{{ title }}</h5>
+<h5>{{ title|safe }}</h5>
 <div class="row">
     {% for store in stores %}
     <div class="col s12 m4">
         <div class="card">
             <div class="card-image">
                 <a href="{{ url_for('specific_store', id=store.id) }}">
-                    <img class="activator"
+                    <img class="activator store-logo"
                          src="https://res.cloudinary.com/{{ cloud_name }}/image/upload/{{ store.image_file }}">
                 </a>
             </div>
             <div class="card-content">
                 <span class="card-title activator grey-text text-darken-4">{{ store.company_name }}</span>
-                <p><a href="{{ url_for('specific_store', id=store.id) }}">View store</a></p>
+                <p><a href="{{ url_for('specific_store', id=store.id) }}">View details</a></p>
             </div>
         </div>
     </div>
