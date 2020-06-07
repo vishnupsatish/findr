@@ -106,6 +106,7 @@ class InfoForm(FlaskForm):
 	website = URLField('Website', validators=[DataRequired()])
 	source = StringField('Where did you get this information? (Websites, URLs, etc.)', validators=[DataRequired()])
 	image_link = URLField('Add a link for the logo of the company/facility/amenity, with a white or transparent background.', validators=[DataRequired()])
+	other_info = TextAreaField('Any other information?')
 	submit = SubmitField('Add')
 
 	def validate_image_link(self, image_link):

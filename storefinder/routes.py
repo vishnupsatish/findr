@@ -31,7 +31,6 @@ def home():
     max_available = min(6, stores.count())
     for i in range(max_available):
         display_stores.append(stores[i])
-    print(display_stores)
     return render_template('home.html', stores=display_stores, title="Recently Added", cloud_name=cloud_name, page_title="Home")
 
 @app.route('/about')
@@ -185,7 +184,6 @@ def new_2():
             store_content += "<b>" + field.label.text + "</b><br><p>" + "".join([data]) + "</p>"
         secret_key = secrets.token_hex(16)
         cloudinary.uploader.upload(imgByteArr, public_id=str(filename) + secret_key)
-        print(store_content)
         store = Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png")
         db.session.add(store)
         db.session.commit()
