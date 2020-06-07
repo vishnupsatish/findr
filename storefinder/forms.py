@@ -1,9 +1,10 @@
+import requests
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, DateField, SelectField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, DateField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from wtforms.fields.html5 import URLField
+from wtforms.fields.html5 import URLField, IntegerField
 from storefinder.models import User
 
 
@@ -69,8 +70,19 @@ class BasicInfoForm(FlaskForm):
 
 class InfoForm(FlaskForm):
 	name = StringField('Name of facility/amenity/business', validators=[DataRequired()])
+	date = StringField('When did this facility/amenity/business open?', validators=[DataRequired()])
 	phone_number = IntegerField('Phone number', validators=[DataRequired()])
 	website = URLField('Website', validators=[DataRequired()])
+	source = StringField('Where did you get this information? (Websites, URLs, etc.)', validators=[DataRequired()])
+	image_link = URLField('Add a link for the logo of the company/facility/amenity, with a white or transparent background.', validators=[DataRequired()])
+	submit = SubmitField('Add')
+
+	def validate_image_link(self, image_link):
+		print(image_link.data)
+		image_formats = ("image/png", "image/jpeg", "image/jpg")
+		r = requests.head(image_link.data)
+		if not r.headers["content-type"] in image_formats:
+			raise ValidationError("The image link you have provided is not a direct link to an image, in JPG or PNG format.")
 
 
 class BasicStoreForm(InfoForm):
@@ -85,23 +97,23 @@ class BasicStoreForm(InfoForm):
 
 
 class HospitalForm(InfoForm):
-	social_distancing_rules = TextAreaField('What social distancing rules do customers have to follow?')
+	social_distancing_rules = TextAreaField('What social distancing rules do customers have to follow?', validators=[DataRequired()])
 
 
 class CarMechanicForm(InfoForm):
-	social_distancing_rules = TextAreaField('What social distancing rules do customers have to follow?')
+	social_distancing_rules = TextAreaField('What social distancing rules do customers have to follow?', validators=[DataRequired()])
 	method_of_business = SelectMultipleField('How are they conducting business?', choices=[('In-location', 'In-location'),
 																						   ('Home repair', 'Home repair')],
 																							validators=[DataRequired()])
 
 
 class CommunityCentreForm(InfoForm):
-	social_distancing_rules = TextAreaField('What social distancing rules do visitors have to follow?')
+	social_distancing_rules = TextAreaField('What social distancing rules do visitors have to follow?', validators=[DataRequired()])
 	restrictions = TextAreaField('What are the restricted activities/places?', validators=[DataRequired()])
 
 
 class ClinicServicesForm(InfoForm):
-	social_distancing_rules = TextAreaField('What social distancing rules do visitors/patients have to follow?')
+	social_distancing_rules = TextAreaField('What social distancing rules do visitors/patients have to follow?', validators=[DataRequired()])
 	type_of_clinic = SelectMultipleField('What type of clinic is this?', choices=[('Dentist', 'Dentist'),
 																						   ('Optometrist', 'Optometrist'),
 																						   ('Walk-in Clinic', 'Walk-in Clinic')],
@@ -123,7 +135,7 @@ class HouseholdServicesForm(InfoForm):
 
 
 class FurnitureForm(BasicStoreForm):
-	assembly = BooleanField('Do they offer porch/home assembly?')
+	assembly = BooleanField('Porch/home assembly')
 
 
 class ParkForm(InfoForm):

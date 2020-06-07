@@ -1,10 +1,89 @@
 {% extends "navbar.html" %}
 {% block content %}
-    {% for field in form %}
-{{ field.label }}
-    
-{{ field }}
+<div class="row" style="margin-top: 20px;">
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <h5>Category: {{ category }}</h5>
+
+        {% for field in form if field.widget.input_type != 'hidden' and field.widget.input_type != "submit" %}
+
+        {% if field.type == "TextAreaField" %}
+        <div class="row">
+            <div class="input-field col s12">
+                {{ field.label }}
+                {{ field(class_="validate materialize-textarea") }}
+            </div>
+        </div>
+        {% elif field.type == "SelectMultipleField" %}
+        <div class="row">
+            <div class="input-field col s12">
+                {% if field.errors %}
+                {{ field(class="form-control validate invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in field.errors %}
+
+                    <span class="error-feedback">Please enter a valid response</span>
+                    {% endfor %}
+                </div>
+                {{ field.label(class="active") }}
+                {% else %}
+                {{ field(class="validate") }}
+                {{ field.label() }}
+                {% endif %}
+
+            </div>
+        </div>
+        {% elif field.type == "BooleanField" %}
+        <label style="margin-bottom: 40px; display: block;">
+            {{ field() }}
+            <span>{{ field.label }}</span>
+        </label>
+        {% elif field.label.text == "When did this facility/amenity/business open?" %}
+        <div class="row">
+            <div class="input-field col s12">
+                {% if field.errors %}
+                {{ field(class="form-control validate invalid datepicker") }}
+                <div class="invalid-feedback">
+                    {% for error in field.errors %}
+
+                    <span class="error-feedback">Please enter a valid response</span>
+                    {% endfor %}
+                </div>
+                {{ field.label(class="active") }}
+                {% else %}
+                {{ field(class="validate datepicker") }}
+                {{ field.label }}
+                {% endif %}
 
 
-    {% endfor %}
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            <div class="input-field col s12">
+                {% if field.errors %}
+                {{ field(class="form-control validate invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in field.errors %}
+
+                    <span class="error-feedback">Please enter a valid response</span>
+                    {% endfor %}
+                </div>
+                {{ field.label(class="active") }}
+                {% else %}
+                {{ field(class="validate") }}
+                {{ field.label }}
+                {% endif %}
+
+
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        <div class="form-group">
+            <button onclick="window.history.back();" class="btn">Back</button>
+            {{ form.submit(class="btn") }}
+        </div>
+    </form>
+</div>
 {% endblock content %}

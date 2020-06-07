@@ -1,0 +1,10 @@
+{% extends "navbar.html" %}
+{% block content %}
+<div class="row">
+<img style="display: block;" class="align-centre" src="https://res.cloudinary.com/dnwczwamg/image/upload/{{ image }}">
+    </div>
+
+<div class="row">
+{{ content|safe }}
+</div>
+{% endblock content %}

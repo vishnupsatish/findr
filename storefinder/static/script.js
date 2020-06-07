@@ -1,6 +1,9 @@
 
 
 $(document).ready(function() {
+    $('.datepicker').datepicker({
+        maxDate: new Date()
+    });
     $('select').formSelect();
     $('.sidenav').sidenav();
     if($(window).width() > 750) {
@@ -61,3 +64,7 @@ $(window).on('resize', function() {
 
     
 })
+
+
+
+
