@@ -3,37 +3,41 @@
 {% block navbar %}
 <div class="navbar-fixed">
     <nav>
-      <div class="nav-wrapper">
-        {% if current_user.is_authenticated %}
-        <a style="margin-left: 20px;" href="{{ url_for('home') }}" class="brand-logo">Logo</a>
-        {% else %}
-        <a style="margin-left: 20px;" href="{{ url_for('login') }}" class="brand-logo">Logo</a>
-        {% endif %}
-  
-        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-        <ul class="right hide-on-med-and-down">
-          {% if current_user.is_authenticated %}
-          <li><a href="{{ url_for('home') }}">Home</a></li>
-          <li><a href="#">Search</a></li>
-          <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-          {% else %}
-          <li><a href="{{ url_for('login') }}">Log In</a></li>
-          <li><a href="{{ url_for('register') }}">Register</a></li>
-          {% endif %}
-        </ul>
-      </div>
+        <div class="nav-wrapper">
+            {% if current_user.is_authenticated %}
+            <a style="margin-left: 20px;" href="{{ url_for('home') }}" class="brand-logo">Logo</a>
+            {% else %}
+            <a style="margin-left: 20px;" href="{{ url_for('login') }}" class="brand-logo">Logo</a>
+            {% endif %}
+
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('all') }}">All</a></li>
+                <li><a href="{{ url_for('new') }}">New</a></li>
+                <li><a href="{{ url_for('search') }}">Search</a></li>
+                <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}">Log In</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
-    </div>
-  
-    <ul class="sidenav" id="mobile-demo">
-        {% if current_user.is_authenticated %}
-        <li><a href="{{ url_for('home') }}">Home</a></li>
-        <li><a href="#">Search</a></li>
-        <li><a href="{{ url_for('login') }}">Account</a></li>
-        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
-        {% else %}
-        <li><a href="{{ url_for('login') }}">Log In</a></li>
-        <li><a href="{{ url_for('register') }}">Register</a></li>
-        {% endif %}
-    </ul>
+</div>
+
+<ul class="sidenav" id="mobile-demo">
+    {% if current_user.is_authenticated %}
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('all') }}">All</a></li>
+    <li><a href="{{ url_for('new') }}">New</a></li>
+    <li><a href="{{ url_for('search') }}">Search</a></li>
+    <li><a href="{{ url_for('login') }}">Account</a></li>
+    <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+    {% else %}
+    <li><a href="{{ url_for('login') }}">Log In</a></li>
+    <li><a href="{{ url_for('register') }}">Register</a></li>
+    {% endif %}
+</ul>
 {% endblock %}

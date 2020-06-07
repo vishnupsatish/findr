@@ -36,19 +36,19 @@
 
     </div>
     <div class="row">
-    <div class="input-field col s12">
-        {{ form.interests.label(class="active") }}
-        {% if form.interests.errors %}
-        {{ form.interests(class="invalid validate") }}
-        <div class="invalid-feedback">
-            {% for error in form.interests.errors %}
-            <span class="error-feedback">{{ error }}</span>
-            {% endfor %}
+        <div class="input-field col s12">
+            {{ form.interests.label(class="active") }}
+            {% if form.interests.errors %}
+            {{ form.interests(class="invalid validate") }}
+            <div class="invalid-feedback">
+                {% for error in form.interests.errors %}
+                <span class="error-feedback">{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.interests(class="validate") }}
+            {% endif %}
         </div>
-        {% else %}
-        {{ form.interests(class="validate") }}
-        {% endif %}
-    </div>
     </div>
     <div class="row">
         <div class="input-field col s12">
@@ -64,7 +64,7 @@
             {{ form.school(class="validate") }}
             {% endif %}
         </div>
-        </div>
+    </div>
     <div class="row">
 
         {{ form.picture.label() }}

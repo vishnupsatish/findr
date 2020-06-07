@@ -1,10 +1,20 @@
 {% extends "navbar.html" %}
 {% block content %}
 <div class="row">
-<img style="display: block;" class="align-centre" src="https://res.cloudinary.com/dnwczwamg/image/upload/{{ image }}">
+    <img style="display: block; width: 30%;" class="align-centre responsive-img"
+         src="https://res.cloudinary.com/{{ cloud_name }}/image/upload/{{ image }}">
+    {% if admin %}
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.submit(class="red btn", style="margin-bottom: 20px") }}
+        </div>
+    </form>
+    {% endif %}
+    <div class="chip">
+        {{ category }}
     </div>
-
-<div class="row">
-{{ content|safe }}
+    <br>
+    {{ content|safe }}
 </div>
 {% endblock content %}

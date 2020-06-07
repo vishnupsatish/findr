@@ -1,52 +1,50 @@
 {% extends "layout.html" %}
 
 
-
-
-
-  <!--<div class="row" style="margin-top: 10px;">-->
-    {% block navbar %}
-    <div class="navbar-fixed">
+<!--<div class="row" style="margin-top: 10px;">-->
+{% block navbar %}
+<div class="navbar-fixed">
 
     <nav>
-    <div class="nav-wrapper">
+        <div class="nav-wrapper">
 
-    <form action="" method="POST" class="col s12">
+            <form action="" method="POST" class="col s12">
 
-        <div style="float: right; width: 90%" class="input-field">
-            {% if form.name.errors %}
-                {{ form.name(id="search") }}
-                
-                <div class="invalid-feedback">
-                    {% for error in form.name.errors %}
+                <div style="float: right; width: 90%" class="input-field">
+                    {% if form.name.errors %}
+                    {{ form.name(id="search") }}
+
+                    <div class="invalid-feedback">
+                        {% for error in form.name.errors %}
                         <span class="error-feedback">{{ error }}</span>
-                    {% endfor %}
-                </div>
-            {% else %}
-                {{ form.name(id="search", maxlength=15) }}
-                
-            {% endif %}
-            <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-            <i class="material-icons">close</i>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    {{ form.name(id="search", maxlength=15) }}
 
+                    {% endif %}
+                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                    <i class="material-icons">close</i>
+
+
+                </div>
+
+
+                {{ form.submit(id="search-button", class="btn", style="position: absolute; top: 15px; right: 80px") }}
+
+
+            </form>
+            <button onclick="window.history.back()" class="btn-flat"
+                    style="position: absolute; line-height: 40px; top: 0; height: 100%; left: 0%"><i
+                    class="material-icons">keyboard_backspace</i></button>
 
         </div>
-
-
-            {{ form.submit(id="search-button", class="btn", style="position: absolute; top: 15px; right: 80px") }}
-        
-
-    </form>
-    <button onclick="window.history.back()" class="btn-flat" style="position: absolute; line-height: 40px; top: 0; height: 100%; left: 0%"> <i class="material-icons">keyboard_backspace</i></button>
-
-</div>
-</nav>
+    </nav>
 </div>
 {% endblock %}
 
 
 <!--</div>-->
-
 
 
 {% block content %}

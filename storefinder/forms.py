@@ -1,10 +1,11 @@
 import requests
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileAllowed
 from flask_login import current_user
+from flask import Markup
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, DateField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
-from wtforms.fields.html5 import URLField, IntegerField
+from wtforms.widgets import HTMLString
+from wtforms.fields.html5 import URLField, IntegerField, SearchField
 from storefinder.models import User
 
 
@@ -62,6 +63,36 @@ class LoginForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	remember = BooleanField('Remember Me')
 	submit = SubmitField('Login')
+
+
+class InlineButtonWidget(object):
+    html = """
+    <button %s type="submit">%s</button>
+    """
+
+    def __init__(self, label, input_type='submit'):
+        self.input_type = input_type
+        self.label = label
+
+    def __call__(self, **kwargs):
+        param = []
+        for key in kwargs:
+            param.append(key + "=\"" + kwargs[key] + "\"")
+        return HTMLString(self.html % (" ".join(param), self.label))
+
+class ProfileSearchForm(FlaskForm):
+    name = SearchField('search', validators=[Length(min=2, max=20)])
+    materialize_icon = Markup("<i style=\"line-height: 40px; height: 100%;\" class=\"material-icons\">search</i>")
+    font_awesome = Markup(Markup("<i style=\"font-size: 10px; height: 100%; padding-top: 0px;\" class=\"fas fa-search\"></i>"))
+    submit = InlineButtonWidget(materialize_icon)
+
+class CategorySearchForm(FlaskForm):
+	category = SelectField('Category', choices=category_list, validators=[DataRequired()])
+	submit = SubmitField('Search')
+
+class AdminDeleteForm(FlaskForm):
+	submit = SubmitField('Delete')
+
 
 class BasicInfoForm(FlaskForm):
 	category = SelectField('Category', choices=category_list, validators=[DataRequired()])
