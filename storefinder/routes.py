@@ -186,7 +186,7 @@ def new_2():
         secret_key = secrets.token_hex(16)
         cloudinary.uploader.upload(imgByteArr, public_id=str(filename) + secret_key)
         print(store_content)
-        store = Store(company_name=form.name.data, content=store_content, author=current_user, date=datetime.strptime(form.date.data, "%b %d, %Y"), category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png")
+        store = Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png")
         db.session.add(store)
         db.session.commit()
         flash("Your store posting has been sent to the moderators for approval.", "success")

@@ -101,7 +101,7 @@ class BasicInfoForm(FlaskForm):
 
 class InfoForm(FlaskForm):
 	name = StringField('Name of facility/amenity/business', validators=[DataRequired()])
-	date = StringField('When did this facility/amenity/business open?', validators=[DataRequired()])
+	date = StringField('When did this facility/amenity/business open?')
 	phone_number = IntegerField('Phone number', validators=[DataRequired()])
 	website = URLField('Website', validators=[DataRequired()])
 	source = StringField('Where did you get this information? (Websites, URLs, etc.)', validators=[DataRequired()])
