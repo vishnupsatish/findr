@@ -212,7 +212,7 @@ def specific_store(id):
         store = Store.query.get_or_404(id)
         if not admin:
             abort(403)
-        cloudinary.uploader.destroy(store.image_file)
+        cloudinary.uploader.destroy(store.image_file[:-4])
         db.session.delete(store)
         db.session.commit()
         return redirect(url_for('home'))
