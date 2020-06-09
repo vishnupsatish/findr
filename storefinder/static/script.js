@@ -6,9 +6,13 @@ $(document).ready(function() {
     });
     $('select').formSelect();
     $('.sidenav').sidenav();
+    $('.fixed-action-btn').floatingActionButton();
 
 });
 
+function openNew() {
+    setTimeout(function(){ window.location.href = "/new"; }, 200);
+}
 
 
 
