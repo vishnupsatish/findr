@@ -4,24 +4,24 @@
 <div class="row">
     {% for store in stores %}
     <div class="col s12 m4">
-        <div class="card">
-            <div class="card-image">
-                <a href="{{ url_for('specific_store', id=store.id) }}">
+        <a href="{{ url_for('specific_store', id=store.id) }}">
+
+            <div class="card ">
+                <div class="card-image waves-effect">
                     <img class="activator store-logo"
                          src="https://res.cloudinary.com/{{ cloud_name }}/image/upload/{{ store.image_file }}">
-                </a>
+                </div>
+                <div class="card-content">
+                    <span class="card-title activator grey-text text-darken-4">{{ store.company_name }}</span>
+                    <p><!--<a href="{{ url_for('specific_store', id=store.id) }}">View details</a>-->View details</p>
+                </div>
             </div>
-            <div class="card-content">
-                <span class="card-title activator grey-text text-darken-4">{{ store.company_name }}</span>
-                <p><a href="{{ url_for('specific_store', id=store.id) }}">View details</a></p>
-            </div>
-        </div>
+        </a>
+
     </div>
     {% endfor %}
 </div>
 {% include "fab.html" %}
-
-
 
 
 {% endblock content %}
