@@ -1,3 +1,4 @@
 storefinder/site.db
 venv
 .idea
+__pycache__
