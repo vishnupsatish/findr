@@ -291,7 +291,7 @@ def category():
     form = CategorySearchForm()
     if form.validate_on_submit():
         return redirect(url_for('specific_category', category=form.category.data))
-    return render_template('new.html', title="New", form=form, page_title="Categories")
+    return render_template('category.html', title="New", form=form, page_title="Categories")
 
 
 @app.route('/category/<string:category>')
@@ -300,7 +300,11 @@ def specific_category(category):
     return render_template('home.html', stores=stores, title="Category: " + category, cloud_name=cloud_name, page_title="Category")
 
 
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
