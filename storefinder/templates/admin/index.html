@@ -1,0 +1,5 @@
+{% extends "admin/master.html" %}
+
+{% block body %}
+<h4>Welcome to your admin dashboard, {{ current_user.username }}! <a href="{{ url_for('home') }}">Home.</a></h4>
+{% endblock %}

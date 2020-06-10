@@ -27,9 +27,19 @@ class AdminView(ModelView):
 
         abort(404)
 
+class UserView(ModelView):
+
+    def is_accessible(self):
+        if not current_user.is_authenticated:
+            return False
+
+        if current_user.admin and current_user.email == "vishnupavan.satish@gmail.com":
+            return True
+
+        return False
 
 
-admin.add_view(AdminView(User, db.session))
+admin.add_view(UserView(User, db.session))
 admin.add_view(AdminView(Store, db.session))
 
 
