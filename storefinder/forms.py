@@ -1,12 +1,14 @@
 import requests
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from flask import Markup
+from flask import Markup, request
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField, SelectMultipleField, DateField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from wtforms.widgets import HTMLString
 from wtforms.fields.html5 import URLField, IntegerField, SearchField
 from storefinder.models import User
+from geopy.geocoders import Nominatim
+
 
 
 category_list = [("Arts and Crafts", "Arts and Crafts"),
@@ -100,6 +102,7 @@ class AdminDeleteForm(FlaskForm):
 
 class BasicInfoForm(FlaskForm):
 	category = SelectField('Category', choices=category_list, validators=[DataRequired()])
+	chain = BooleanField('Is it a chain? (More than one location)')
 	submit = InlineButtonWidget('Next')
 
 
@@ -199,8 +202,14 @@ class ActivityForm(InfoForm):
 class MallForm(InfoForm):
 	social_distancing_rules = TextAreaField('What social distancing rules do visitors have to follow?', validators=[DataRequired()])
 
+def address_form(inherit):
+	class AddressForm(inherit):
+		city = StringField('What city is it located in?', validators=[DataRequired()])
+		state_province = StringField('What state/province is it located in? (if applicable)')
+		country = StringField('What country is it located in?', validators=[DataRequired()])
 
 
+	return AddressForm
 
 
 

@@ -12,6 +12,9 @@ from storefinder.forms import *
 from storefinder.models import User, Store
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_admin.contrib.sqla import ModelView
+from geopy.geocoders import Nominatim
+
+
 
 class AdminView(ModelView):
 
@@ -116,6 +119,7 @@ def new():
 
     if form.validate_on_submit():
         session['category'] = form.category.data
+        session['chain'] = form.chain.data
         return redirect(url_for('new_2'))
 
     return render_template('new.html', title="New", form=form, page_title="New")
@@ -153,9 +157,11 @@ def new_2():
     if not current_user.is_authenticated:
         flash('Adding businesses/facilities/amenities is available for logged in members only.', 'error')
         return redirect(url_for("login"))
-    form = form_class_map[session['category']]()
     if session['category'] == "":
         return redirect(url_for('home'))
+    form = form_class_map[session['category']]()
+    if session['chain'] == False:
+        form = address_form(form_class_map[session['category']])()
     if form.validate_on_submit():
         store_content = ""
         for field in form:
@@ -165,6 +171,10 @@ def new_2():
             if field.label.text == 'CSRF Token' or field.label.text == "Add" or field.label.text == 'Add a link for the logo of the company/facility/amenity, with a white or transparent background.':
                 continue
             data = field.data
+
+            if field.label.text == "What city is it located in?" or field.label.text == "What state/province is it located in? (if applicable)" or field.label.text == "What country is it located in?":
+                continue
+
             if field.type == "BooleanField":
                 data = "Yes" if field.data else "No"
             elif isinstance(field.data, int):
@@ -175,35 +185,7 @@ def new_2():
                 data = ''
                 for elem in field.data:
                     data += '<div class="chip">' + elem + '</div>'
-            url = form.image_link.data
-            background_url = "https://res.cloudinary.com/" + cloud_name + "/image/upload/v1591538542/background.jpg"
-            response1 = requests.get(url)
-            response2 = requests.get(background_url)
-            dirname = os.path.dirname(__file__)
-            Image1 = Image.open(BytesIO(response2.content))
-            Image1 = Image1.convert("RGBA")
 
-            Image1copy = Image1.copy()
-            Image2 = Image.open(BytesIO(response1.content))
-            Image2 = Image2.convert("RGBA")
-
-            Image2copy = Image2.copy()
-            base = 450
-            if Image2copy.height < Image2copy.width:
-                wpercent = (base / float(Image2copy.size[0]))
-                hsize = int((float(Image2copy.size[1]) * float(wpercent)))
-                Image2copy = Image2copy.resize((base, hsize))
-                Image1copy.paste(Image2copy, (25, 250 - (Image2copy.height // 2)), Image2copy)
-
-            else:
-                hpercent = (base / float(Image2copy.size[1]))
-                wsize = int((float(Image2copy.size[0]) * float(hpercent)))
-                Image2copy = Image2copy.resize((wsize, base))
-                Image1copy.paste(Image2copy, (250 - (Image2copy.width // 2), 25), Image2copy)
-
-            imgByteArr = BytesIO()
-            Image1copy.save(imgByteArr, format='PNG')
-            imgByteArr = imgByteArr.getvalue()
             try:
                 filename = Store.query.all()[-1].id + 1
             except:
@@ -211,9 +193,46 @@ def new_2():
 
 
             store_content += "<b>" + field.label.text + "</b><br><p>" + "".join([data]) + "</p>"
+
+        try:
+            geolocator = Nominatim(user_agent=request.headers.get('User-Agent'))
+            location = geolocator.geocode(form.name.data + ", " + form.city.data + ", " + form.state_province.data + ", " + form.country.data,addressdetails=True) if form.state_province.data.strip() == "" else geolocator.geocode(form.name.data + ", " + form.city.data + ", " + form.country.data, addressdetails=True)
+            address = location.raw['display_name']
+            store_content += "<b>" + "Address" + "</b><br><p>" + "".join([address]) + "</p>"
+        except Exception as e:
+            address = False
         secret_key = secrets.token_hex(16)
+        url = form.image_link.data
+        background_url = "https://res.cloudinary.com/" + cloud_name + "/image/upload/v1591538542/background.jpg"
+        response1 = requests.get(url)
+        response2 = requests.get(background_url)
+        dirname = os.path.dirname(__file__)
+        Image1 = Image.open(BytesIO(response2.content))
+        Image1 = Image1.convert("RGBA")
+
+        Image1copy = Image1.copy()
+        Image2 = Image.open(BytesIO(response1.content))
+        Image2 = Image2.convert("RGBA")
+
+        Image2copy = Image2.copy()
+        base = 450
+        if Image2copy.height < Image2copy.width:
+            wpercent = (base / float(Image2copy.size[0]))
+            hsize = int((float(Image2copy.size[1]) * float(wpercent)))
+            Image2copy = Image2copy.resize((base, hsize))
+            Image1copy.paste(Image2copy, (25, 250 - (Image2copy.height // 2)), Image2copy)
+
+        else:
+            hpercent = (base / float(Image2copy.size[1]))
+            wsize = int((float(Image2copy.size[0]) * float(hpercent)))
+            Image2copy = Image2copy.resize((wsize, base))
+            Image1copy.paste(Image2copy, (250 - (Image2copy.width // 2), 25), Image2copy)
+
+        imgByteArr = BytesIO()
+        Image1copy.save(imgByteArr, format='PNG')
+        imgByteArr = imgByteArr.getvalue()
         cloudinary.uploader.upload(imgByteArr, public_id=str(filename) + secret_key)
-        store = Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png")
+        store = Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png", chain=session['chain'], address=address) if address else Store(company_name=form.name.data, content=store_content, author=current_user, category=session['category'], checked=False, image_file=str(filename) + secret_key + ".png", chain=session['chain'])
         db.session.add(store)
         db.session.commit()
         flash("Your facility has been posted!", "success")
@@ -240,7 +259,11 @@ def specific_store(id):
         return redirect(url_for('home'))
 
     store = Store.query.get_or_404(id)
-    return render_template('specific_store.html', content=store.content, image=store.image_file, category=store.category, form=form, admin=admin, cloud_name=cloud_name, page_title="Store")
+    if store.chain:
+        chain = "Multiple Locations"
+    else:
+        chain = "One location"
+    return render_template('specific_store.html', content=store.content, image=store.image_file, category=store.category, form=form, admin=admin, cloud_name=cloud_name, page_title="Store", chain=chain)
 
 
 @app.route('/search', methods=["GET", "POST"])
@@ -277,8 +300,6 @@ def specific_category(category):
     return render_template('home.html', stores=stores, title="Category: " + category, cloud_name=cloud_name, page_title="Category")
 
 
-
-# Error Handling
 
 @app.errorhandler(404)
 def page_not_found(e):

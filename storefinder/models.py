@@ -30,6 +30,8 @@ class Store(db.Model):
     date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     checked = db.Column(db.Boolean, nullable=False)
+    chain = db.Column(db.Boolean, nullable=False)
+    address = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
