@@ -1,6 +1,7 @@
-from storefinder import db, login_manager, app
+from storefinder import db, login_manager, app, admin
 from flask_login import UserMixin
 from datetime import datetime
+
 
 
 @login_manager.user_loader
@@ -18,7 +19,7 @@ class User(db.Model, UserMixin):
 
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}', '{self.admin}')"
 
 
 class Store(db.Model):
@@ -30,3 +31,7 @@ class Store(db.Model):
     content = db.Column(db.Text, nullable=False)
     checked = db.Column(db.Boolean, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"User('{self.company_name}', '{self.category}', '{self.image_file}')"
+

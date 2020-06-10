@@ -7,10 +7,29 @@ import cloudinary.uploader
 import cloudinary.api
 from datetime import datetime
 from flask import render_template, url_for, flash, redirect, request, abort, session
-from storefinder import app, db, bcrypt
+from storefinder import app, db, bcrypt, admin
 from storefinder.forms import *
 from storefinder.models import User, Store
 from flask_login import login_user, current_user, logout_user, login_required
+from flask_admin.contrib.sqla import ModelView
+
+class AdminView(ModelView):
+
+    def is_accessible(self):
+        if not current_user.is_authenticated:
+            abort(404)
+
+        if current_user.admin:
+            return True
+
+        abort(404)
+
+
+
+admin.add_view(AdminView(User, db.session))
+admin.add_view(AdminView(Store, db.session))
+
+
 
 cloud_name = os.environ['CLOUDINARY_CLOUD_NAME']
 api_key = os.environ['CLOUDINARY_API_KEY']
@@ -21,6 +40,9 @@ cloudinary.config(
     api_key=api_key,
     api_secret=api_secret
 )
+
+
+
 
 
 @app.before_request

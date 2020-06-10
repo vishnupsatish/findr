@@ -32,6 +32,23 @@ category_list = [("Arts and Crafts", "Arts and Crafts"),
 				("Sports and Recreation", "Sports and Recreation"),
 				("Technology", "Technology")]
 
+
+
+class InlineButtonWidget(object):
+    html = """
+    <button %s type="submit">%s</button>
+    """
+
+    def __init__(self, label, input_type='submit'):
+        self.input_type = input_type
+        self.label = label
+
+    def __call__(self, **kwargs):
+        param = []
+        for key in kwargs:
+            param.append(key + "=\"" + kwargs[key] + "\"")
+        return Markup(self.html % (" ".join(param), self.label))
+
 class RegistrationForm(FlaskForm):
 	username = StringField('Username',
 						   validators=[DataRequired(), Length(min=2, max=20)])
@@ -40,7 +57,7 @@ class RegistrationForm(FlaskForm):
 	password = PasswordField('Password', validators=[DataRequired()])
 	confirm_password = PasswordField('Confirm Password',
 									 validators=[DataRequired(), EqualTo('password')])
-	submit = SubmitField('Sign Up')
+	submit = InlineButtonWidget('Sign Up')
 
 	def validate_username(self, username):
 		try:
@@ -62,23 +79,10 @@ class LoginForm(FlaskForm):
 						validators=[DataRequired(), Email()])
 	password = PasswordField('Password', validators=[DataRequired()])
 	remember = BooleanField('Remember Me')
-	submit = SubmitField('Login')
+	submit = InlineButtonWidget('Login')
 
 
-class InlineButtonWidget(object):
-    html = """
-    <button %s type="submit">%s</button>
-    """
 
-    def __init__(self, label, input_type='submit'):
-        self.input_type = input_type
-        self.label = label
-
-    def __call__(self, **kwargs):
-        param = []
-        for key in kwargs:
-            param.append(key + "=\"" + kwargs[key] + "\"")
-        return HTMLString(self.html % (" ".join(param), self.label))
 
 class ProfileSearchForm(FlaskForm):
     name = SearchField('search', validators=[Length(min=2, max=20)])
@@ -88,15 +92,15 @@ class ProfileSearchForm(FlaskForm):
 
 class CategorySearchForm(FlaskForm):
 	category = SelectField('Category', choices=category_list, validators=[DataRequired()])
-	submit = SubmitField('Search')
+	submit = InlineButtonWidget('Search')
 
 class AdminDeleteForm(FlaskForm):
-	submit = SubmitField('Delete')
+	submit = InlineButtonWidget('Delete')
 
 
 class BasicInfoForm(FlaskForm):
 	category = SelectField('Category', choices=category_list, validators=[DataRequired()])
-	submit = SubmitField('Next')
+	submit = InlineButtonWidget('Next')
 
 
 class InfoForm(FlaskForm):
@@ -107,7 +111,7 @@ class InfoForm(FlaskForm):
 	source = StringField('Where did you get this information? (Websites, URLs, etc.)', validators=[DataRequired()])
 	image_link = URLField('Add a link for the logo of the company/facility/amenity, with a white or transparent background.', validators=[DataRequired()])
 	other_info = TextAreaField('Any other information?')
-	submit = SubmitField('Add')
+	submit = InlineButtonWidget('Add')
 
 	def validate_image_link(self, image_link):
 		print(image_link.data)
