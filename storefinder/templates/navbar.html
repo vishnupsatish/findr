@@ -17,6 +17,9 @@
                 <li><a href="{{ url_for('search') }}">Search</a></li>
                 <li><a href="{{ url_for('about') }}">About</a></li>
                 <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+                {% if current_user.admin %}
+                <li><a class="btn red waves-effect" href="/admin">Admin</a></li>
+                {% endif %}
                 {% else %}
                 <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('all') }}">All</a></li>
@@ -40,6 +43,9 @@
     <li><a href="{{ url_for('search') }}">Search</a></li>
     <li><a href="{{ url_for('about') }}">About</a></li>
     <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+    {% if current_user.admin %}
+    <li><a href="/admin">Admin</a></li>
+    {% endif %}
     {% else %}
     <li><a href="{{ url_for('home') }}">Home</a></li>
     <li><a href="{{ url_for('all') }}">All</a></li>
